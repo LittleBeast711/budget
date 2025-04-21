@@ -25,4 +25,4 @@
 git clone https://github.com/LittleBeast711/budget.git
 cd budget
 npm install
-npm start
+npx epxo start
