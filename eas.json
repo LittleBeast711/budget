@@ -9,7 +9,10 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "workflow": "managed",
+      "distribution": "internal",
+      "platform": "android",
+      "buildType": "apk"
     },
     "production": {
       "autoIncrement": true

@@ -26,7 +26,7 @@ const groupByMonth = (billList: Bill[]) => {
       return acc
     }
 
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 
     if (!acc[monthKey]) acc[monthKey] = []
     acc[monthKey].push(bill)
@@ -139,8 +139,8 @@ const HomeScreen = ()=> {
   }) : bills
 
   const grouped = groupByMonth(filteredBills)
-  const sections = Object.entries(grouped).map(([month, data]) => ({
-    title: month,
+  const sections = Object.entries(grouped).map(([date, data]) => ({
+    title: date,
     data
   }))
 
@@ -183,11 +183,7 @@ const HomeScreen = ()=> {
       />
       <TouchableOpacity 
         style={[styles.button,{backgroundColor: 'red', bottom: 100}]} 
-        onPress={async () => {
-          await AsyncStorage.removeItem(BILL_KEY)
-          setBills([])
-        }}
-        // onPress={clearBills}
+        onPress={clearBills}
       >
         <Text style={styles.buttonText}>🗑️ 清空账单</Text>
       </TouchableOpacity>

@@ -73,6 +73,7 @@ const CategoryScreen = () => {
         <Text style={styles.buttonText}>➕ 添加分类</Text>
       </TouchableOpacity>
 
+      <Text style={{fontSize:14,marginBottom:5,color:'#bfbfbf'}}>长按删除分类</Text>
       <FlatList
         data={categories}
         keyExtractor={(item) => item.id}
