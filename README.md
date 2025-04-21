@@ -26,3 +26,27 @@ git clone https://github.com/LittleBeast711/budget.git
 cd budget
 npm install
 npx epxo start
+
+
+##📦 打包发布（EAS）
+eas build -p android
+eas build -p ios
+需要提前登录并配置好 eas.json 与 Apple/Google 账号。
+
+##📁 项目结构简述
+├── App.tsx                // 项目入口
+├── screens/               // 页面组件
+│   ├── HomeScreen.tsx
+│   ├── AddBillScreen.tsx
+│   ├── CategoryScreen.tsx
+│   └── SettingsScreen.tsx
+├── types/                 // 类型定义
+│   └── type.ts
+└── ...
+
+##💡 TODO
+ - 图表展示支出趋势
+
+ - 导出账单数据
+
+ - 多语言支持
