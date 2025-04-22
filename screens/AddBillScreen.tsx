@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList, TouchableWithoutFeedback,  Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/type';
@@ -67,97 +67,101 @@ const AddBillScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>添加账单</Text>
 
-      {/* 日期选择 */}
-      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
-        <Text style={styles.label}>选择日期: {selectedDate.toLocaleDateString()}</Text>
-      </TouchableOpacity>
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate}
-          mode="date"
-          onChange={handleDateChange}
-          style={{ marginBottom: 20 }}
+
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <Text style={styles.header}>添加账单</Text>
+
+        {/* 日期选择 */}
+        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+          <Text style={styles.label}>选择日期: {selectedDate.toLocaleDateString()}</Text>
+        </TouchableOpacity>
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDate}
+            mode="date"
+            onChange={handleDateChange}
+            style={{ marginBottom: 20 }}
+          />
+        )}
+
+        <TextInput
+          style={styles.input}
+          value={title}
+          onChangeText={setTitle}
+          placeholder="标题"
+          placeholderTextColor={'#999'}
         />
-      )}
+        <TextInput
+          style={styles.input}
+          value={amount}
+          onChangeText={(text) => setAmount(text.replace(/[^0-9.]/g, ''))}        
+          placeholder="金额"
+          placeholderTextColor={'#999'}
+          keyboardType="numeric"
+        />
 
-      <TextInput
-        style={styles.input}
-        value={title}
-        onChangeText={setTitle}
-        placeholder="标题"
-        placeholderTextColor={'#999'}
-      />
-      <TextInput
-        style={styles.input}
-        value={amount}
-        onChangeText={(text) => setAmount(text.replace(/[^0-9.]/g, ''))}        
-        placeholder="金额"
-        placeholderTextColor={'#999'}
-        keyboardType="numeric"
-      />
-
-      {/* 分类选择 */}
-      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.input}>
-        <Text style={styles.label}>
-          {selectedCategory ? selectedCategory : '选择分类'}
-        </Text>
-      </TouchableOpacity>
-
-      {/* 类型选择 */}
-      <View style={styles.typeContainer}>
-        <TouchableOpacity
-          onPress={() => setType('expense')}
-          style={[styles.typeButton, type === 'expense' && styles.active]}
-        >
-          <Text style={styles.typeText}>支出</Text>
+        {/* 分类选择 */}
+        <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.input}>
+          <Text style={styles.label}>
+            {selectedCategory ? selectedCategory : '选择分类'}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setType('income')}
-          style={[styles.typeButton, type === 'income' && styles.active]}
-        >
-          <Text style={styles.typeText}>收入</Text>
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitText}>提交账单</Text>
-      </TouchableOpacity>
-
-      {/* 分类选择 Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>选择分类</Text>
-            <FlatList
-              data={categories}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => handleCategorySelect(item)}
-                >
-                  <Text style={styles.modalItemText}>{item.name}</Text>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.modalCloseButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.modalCloseButtonText}>关闭</Text>
-            </TouchableOpacity>
-          </View>
+        {/* 类型选择 */}
+        <View style={styles.typeContainer}>
+          <TouchableOpacity
+            onPress={() => setType('expense')}
+            style={[styles.typeButton, type === 'expense' && styles.active]}
+          >
+            <Text style={styles.typeText}>支出</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setType('income')}
+            style={[styles.typeButton, type === 'income' && styles.active]}
+          >
+            <Text style={styles.typeText}>收入</Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
-    </View>
+
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitText}>提交账单</Text>
+        </TouchableOpacity>
+
+        {/* 分类选择 Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>选择分类</Text>
+              <FlatList
+                data={categories}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.modalItem}
+                    onPress={() => handleCategorySelect(item)}
+                  >
+                    <Text style={styles.modalItemText}>{item.name}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.modalCloseButtonText}>关闭</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
