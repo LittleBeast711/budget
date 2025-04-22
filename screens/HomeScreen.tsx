@@ -147,13 +147,7 @@ const HomeScreen = ()=> {
   }))
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={80}
-      >
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.container}>
+      <View style={styles.container}>
         <Text style={styles.title}>欢迎使用记账本</Text>
         <Text style={styles.subTitle}>您的个人理财助理</Text>
         {/* <FlatList
@@ -199,8 +193,6 @@ const HomeScreen = ()=> {
           <Text style={styles.buttonText}>➕ 添加账单</Text>
         </TouchableOpacity>
       </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
   )
 }
 

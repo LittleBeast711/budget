@@ -25,9 +25,11 @@ const styles = StyleSheet.create({
     flex: 1, 
     paddingTop: 20,
     paddingHorizontal: 20,
+    backgroundColor: '#f9f9f9',
   },
   title: { 
-    fontSize: 24, 
+    fontSize: 26, 
+    fontWeight: 'bold',
     marginBottom: 20 
   },
   button: { 

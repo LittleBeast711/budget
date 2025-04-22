@@ -13,10 +13,12 @@ export type Category = {
 }
 
 export type RootStackParamList = {
+  Main: undefined;
   Home: { newBill: { id: string; title: string; amount: number } } | undefined;
   AddBill: undefined;
   Settings: undefined;
   Category: undefined;
+  Stats: undefined;
 };
 
 export const BILL_KEY = 'bills'

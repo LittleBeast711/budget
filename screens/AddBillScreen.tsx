@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList, TouchableWithoutFeedback,  Keyboard } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/type';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -18,11 +18,13 @@ const AddBillScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    AsyncStorage.getItem(CATEGORY_KEY).then((res) => {
-      if (res) setCategories(JSON.parse(res));
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      AsyncStorage.getItem(CATEGORY_KEY).then((res) => {
+        if (res) setCategories(JSON.parse(res));
+      });
+    }, [])
+)
 
   const handleSubmit = () => {
     if (!title || !amount) {
@@ -48,6 +50,7 @@ const AddBillScreen = () => {
       amount: type === 'expense' ? -parsedAmount : parsedAmount,
       category: selectedCategory,
       date: selectedDate.toISOString(),
+      type,
     };
     navigation.navigate('Home', { newBill });
     setTitle('');
@@ -67,8 +70,6 @@ const AddBillScreen = () => {
   };
 
   return (
-
-
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <Text style={styles.header}>添加账单</Text>
