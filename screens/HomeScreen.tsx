@@ -1,5 +1,5 @@
 import React,{ useEffect, useState} from 'react';
-import { View, StyleSheet, Text, FlatList, TouchableOpacity, Alert,SectionList } from 'react-native';
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, Alert,SectionList, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import type { RootStackParamList } from '../types/type'
@@ -56,7 +56,7 @@ const HomeScreen = ()=> {
 
   useEffect(() => {
     const saveNewBill = async () => {
-      const newBill = route.params?.newBill
+      const newBill = route.params?.newBill      
       if (!newBill) return
   
       const stored = await AsyncStorage.getItem(BILL_KEY)
@@ -65,6 +65,8 @@ const HomeScreen = ()=> {
   
       await AsyncStorage.setItem(BILL_KEY, JSON.stringify(newList))
       setBills(newList)
+      navigation.setParams({ newBill: null })
+      
     }
   
     saveNewBill()
@@ -138,59 +140,67 @@ const HomeScreen = ()=> {
     )
   }) : bills
 
-  const grouped = groupByMonth(filteredBills)
+  const grouped = groupByMonth(filteredBills)  
   const sections = Object.entries(grouped).map(([date, data]) => ({
     title: date,
     data
   }))
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>欢迎使用记账本</Text>
-      <Text style={styles.subTitle}>您的个人理财助理</Text>
-      {/* <FlatList
-        data={bills}
-        renderItem={renderItem}
-        keyExtractor={(item: Bill) => item.id}
-        contentContainerStyle={styles.list}
-      /> */}
-      <View style={styles.filterRow}>
-        <TouchableOpacity onPress={() => setShowPicker(true)} style={[styles.filterButton, { marginRight: 8 }]}>
-          <Text style={styles.filterButtonText}>📅 筛选月份</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={80}
+      >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.container}>
+        <Text style={styles.title}>欢迎使用记账本</Text>
+        <Text style={styles.subTitle}>您的个人理财助理</Text>
+        {/* <FlatList
+          data={bills}
+          renderItem={renderItem}
+          keyExtractor={(item: Bill) => item.id}
+          contentContainerStyle={styles.list}
+        /> */}
+        <View style={styles.filterRow}>
+          <TouchableOpacity onPress={() => setShowPicker(true)} style={[styles.filterButton, { marginRight: 8 }]}>
+            <Text style={styles.filterButtonText}>📅 筛选月份</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setFilterDate(null)} style={styles.filterButton}>
+            <Text style={styles.filterButtonText}>🔄 重置筛选</Text>
+          </TouchableOpacity>
+        </View>
+
+        {showPicker && (
+          <DateTimePicker
+            value={filterDate || new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
+
+        <SectionList 
+          sections={sections}
+          keyExtractor={(item: Bill) => item.id}
+          renderItem={renderItem}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.sectionHeader}>{title}</Text>
+          )}
+          contentContainerStyle={styles.list}
+        />
+        <TouchableOpacity 
+          style={[styles.button,{backgroundColor: 'red', bottom: 100}]} 
+          onPress={clearBills}
+        >
+          <Text style={styles.buttonText}>🗑️ 清空账单</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setFilterDate(null)} style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>🔄 重置筛选</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddBill')}>
+          <Text style={styles.buttonText}>➕ 添加账单</Text>
         </TouchableOpacity>
       </View>
-
-      {showPicker && (
-        <DateTimePicker
-          value={filterDate || new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
-
-      <SectionList 
-        sections={sections}
-        keyExtractor={(item: Bill) => item.id}
-        renderItem={renderItem}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
-        )}
-        contentContainerStyle={styles.list}
-      />
-      <TouchableOpacity 
-        style={[styles.button,{backgroundColor: 'red', bottom: 100}]} 
-        onPress={clearBills}
-      >
-        <Text style={styles.buttonText}>🗑️ 清空账单</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddBill')}>
-        <Text style={styles.buttonText}>➕ 添加账单</Text>
-      </TouchableOpacity>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -199,8 +209,8 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingHorizontal: 10,
     backgroundColor: '#f9f9f9',
   },
   title: {

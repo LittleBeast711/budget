@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View,Text,StyleSheet, TouchableOpacity, FlatList, Alert, TextInput } from 'react-native';
+import { View,Text,StyleSheet, TouchableOpacity, FlatList, Alert, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Category,CATEGORY_KEY } from '../types/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -61,18 +61,15 @@ const CategoryScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>分类管理</Text>
-
       <TextInput
         style={styles.input}
         placeholder="请输入分类名称"
         value={categoryName}
         onChangeText={setCategoryName}
       />
-
       <TouchableOpacity style={styles.button} onPress={addCategory}>
         <Text style={styles.buttonText}>➕ 添加分类</Text>
       </TouchableOpacity>
-
       <Text style={{fontSize:14,marginBottom:5,color:'#bfbfbf'}}>长按删除分类</Text>
       <FlatList
         data={categories}
@@ -80,7 +77,7 @@ const CategoryScreen = () => {
         renderItem={renderItem}
         contentContainerStyle={styles.list}
       />
-    </View>
+    </View>    
   )
 
 }
@@ -91,7 +88,7 @@ export default CategoryScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60,
+    paddingTop: 20,
     paddingHorizontal: 20,
     backgroundColor: '#f9f9f9',
   },

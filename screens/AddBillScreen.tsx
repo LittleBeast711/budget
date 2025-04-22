@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-native';
+import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/type';
@@ -36,17 +36,24 @@ const AddBillScreen = () => {
       return;
     }
 
+    if (!selectedCategory) {
+      Alert.alert('请选择分类');
+      return;
+    }
+    
+
     const newBill = {
       id: Date.now().toString(),
       title,
-      amount: type === 'expense' ? -Math.abs(parsedAmount) : Math.abs(parsedAmount),
+      amount: type === 'expense' ? -parsedAmount : parsedAmount,
       category: selectedCategory,
-      Date: new Date().toISOString(),
+      date: selectedDate.toISOString(),
     };
     navigation.navigate('Home', { newBill });
     setTitle('');
     setAmount('');
     setSelectedCategory('');
+    setSelectedDate(new Date());
   };
 
   const handleDateChange = (event: any, date?: Date) => {
@@ -86,7 +93,7 @@ const AddBillScreen = () => {
       <TextInput
         style={styles.input}
         value={amount}
-        onChangeText={setAmount}
+        onChangeText={(text) => setAmount(text.replace(/[^0-9.]/g, ''))}        
         placeholder="金额"
         placeholderTextColor={'#999'}
         keyboardType="numeric"
@@ -160,7 +167,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 20,
     backgroundColor: '#f9f9f9',
   },
   header: {
