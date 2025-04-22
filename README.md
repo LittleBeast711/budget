@@ -28,12 +28,14 @@ npm install
 npx epxo start
 
 
-##📦 打包发布（EAS）
+## 📦 打包发布（EAS）
+
 eas build -p android
 eas build -p ios
 需要提前登录并配置好 eas.json 与 Apple/Google 账号。
 
-##📁 项目结构简述
+## 📁 项目结构简述
+
 ├── App.tsx                // 项目入口
 ├── screens/               // 页面组件
 │   ├── HomeScreen.tsx
@@ -45,8 +47,11 @@ eas build -p ios
 └── ...
 
 ##💡 TODO
+
  - 图表展示支出趋势
 
- - 导出账单数据
+ - 切换主题色？
 
  - 多语言支持
+
+### 注：如果要在ios测试，需在App Store安装Expo Go
